@@ -75,8 +75,13 @@ module Locomotive::Steam
       end
 
       def cache_key
-        site, path, query = env['steam.site'], env['PATH_INFO'], env['QUERY_STRING']
-        key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{site.last_modified_at.to_i}/page/#{path}/#{query}"
+        site, page, path, query = env['steam.site'], env['PATH_INFO'], env['QUERY_STRING']
+        if page.updated_at
+          key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{page.updated_at.to_i}/page/#{path}/#{query}"
+        else
+          key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{site.last_modified_at.to_i}/page/#{path}/#{query}"
+        end
+        puts "xxxxx #{key}"
         Digest::MD5.hexdigest(key)
       end
 
