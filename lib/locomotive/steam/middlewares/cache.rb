@@ -32,7 +32,7 @@ module Locomotive::Steam
           env['steam.cache_control']        = cache_control
           env['steam.cache_vary']           = cache_vary
           env['steam.cache_etag']           = key
-          env['steam.cache_last_modified']  = site.last_modified_at.httpdate
+          env['steam.cache_last_modified']  = get_updated_at.httpdate
 
           # retrieve the response from the cache.
           # This is useful if no CDN is being used.
@@ -56,11 +56,12 @@ module Locomotive::Steam
         log("Cache key = #{key.inspect}")
         if marshaled = cache.read(key)
           log('Cache HIT')
+          env['steam.cache_status']  = "HIT"
           Marshal.load(marshaled)
         else
           log('Cache MISS')
+          env['steam.cache_status']  = "MISS"
           self.next.tap do |response|
-            # cache the HTML for further validations (+ optimization)
             cache.write(key, marshal(response))
           end
         end
@@ -75,15 +76,37 @@ module Locomotive::Steam
       end
 
       def cache_key
-        site, page, path, query = env['steam.site'], env['PATH_INFO'], env['QUERY_STRING']
-        key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{site.last_modified_at.to_i}/page/#{path}/#{query}"
-        puts "xxxxx #{key}"
-        if page.try(:updated_at).presence
-          puts "yyyyy #{page.try(:updated_at)}"
+        site, path, query = env['steam.site'], env['PATH_INFO'], env['QUERY_STRING']
+        slug = path.split('/').last
+        if entry = fetch_content_entry(slug)
+          ['content_entry', 'entry', entry.content_type.slug.singularize].each do |key|
+             env['steam.content_entry'] = page.content_entry = entry
+          end
         end
+        key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{get_updated_at.to_i}/page/#{path}/#{query}"
         Digest::MD5.hexdigest(key)
       end
 
+      def get_updated_at
+        page.content_entry.try(:updated_at).presence || page.try(:updated_at).presence || site.last_modified_at
+      end
+
+      def fetch_content_entry(slug)
+        if type = content_type_repository.find(page.content_type_id)
+          # don't accept a non localized entry in a locale other than the default one
+          return nil if type.localized_names.count == 0 && locale.to_s != default_locale.to_s
+
+          decorate_entry(content_entry_repository.with(type).by_slug(slug))
+        else
+          nil
+        end
+      end
+      def content_type_repository
+       services.repositories.content_type
+      end
+      def content_entry_repository
+       services.repositories.content_entry
+     end
       def cache_control
         page.try(:cache_control).presence || site.try(:cache_control).presence || DEFAULT_CACHE_CONTROL
       end
@@ -108,7 +131,7 @@ module Locomotive::Steam
 
       def stale?(key)
         env['HTTP_IF_NONE_MATCH'] == key ||
-        env['HTTP_IF_MODIFIED_SINCE'] == site.last_modified_at.httpdate
+        env['HTTP_IF_MODIFIED_SINCE'] == get_updated_at.httpdate
       end
 
       def cache

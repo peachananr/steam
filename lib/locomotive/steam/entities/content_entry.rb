@@ -104,6 +104,10 @@ module Locomotive::Steam
       hash
     end
 
+    def last_modified_at
+      self.updated_at
+    end
+    
     def to_liquid
       Locomotive::Steam::Liquid::Drops::ContentEntry.new(self)
     end

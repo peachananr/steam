@@ -62,6 +62,10 @@ module Locomotive::Steam
       @depth || self[:depth]
     end
 
+    def last_modified_at
+      self.updated_at
+    end
+
     def to_liquid
       Locomotive::Steam::Liquid::Drops::Page.new(self)
     end
