@@ -33,9 +33,10 @@ module Locomotive::Steam
           env['steam.cache_vary']           = cache_vary
           env['steam.cache_etag']           = key
           env['steam.cache_last_modified']  = get_updated_at.httpdate
-
+          env['steam.cache_status']  = "HIT"
           # retrieve the response from the cache.
           # This is useful if no CDN is being used.
+
           code, headers, _ = response = fetch_cached_response(key)
 
           unless CACHEABLE_RESPONSE_CODES.include?(code.to_i)
@@ -56,7 +57,6 @@ module Locomotive::Steam
         log("Cache key = #{key.inspect}")
         if marshaled = cache.read(key)
           log('Cache HIT')
-          env['steam.cache_status']  = "HIT"
           Marshal.load(marshaled)
         else
           log('Cache MISS')
@@ -78,9 +78,11 @@ module Locomotive::Steam
       def cache_key
         site, path, query = env['steam.site'], env['PATH_INFO'], env['QUERY_STRING']
         slug = path.split('/').last
-        if entry = fetch_content_entry(slug)
-          ['content_entry', 'entry', entry.content_type.slug.singularize].each do |key|
-             env['steam.content_entry'] = page.content_entry = entry
+        if page.templatized?
+          if entry = fetch_content_entry(slug)
+            ['content_entry', 'entry', entry.content_type.slug.singularize].each do |key|
+               env['steam.content_entry'] = page.content_entry = entry
+            end
           end
         end
         key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{get_updated_at.to_i}/page/#{path}/#{query}"
