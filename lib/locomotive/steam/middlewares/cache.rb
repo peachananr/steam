@@ -57,6 +57,7 @@ module Locomotive::Steam
         log("Cache key = #{key.inspect}")
         if marshaled = cache.read(key)
           log('Cache HIT')
+          env['steam.cache_status']  = "HIT"
           Marshal.load(marshaled)
         else
           log('Cache MISS')
@@ -86,7 +87,8 @@ module Locomotive::Steam
           end
         end
         key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{get_updated_at.to_i}/page/#{path}/#{query}"
-        Digest::MD5.hexdigest(key)
+        puts "xxxxx #{path} #{query}"
+        #Digest::MD5.hexdigest(key)
       end
 
       def get_updated_at
