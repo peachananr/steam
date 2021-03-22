@@ -87,7 +87,6 @@ module Locomotive::Steam
           end
         end
         key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{get_updated_at.to_i}/page/#{path}/#{query}"
-        puts key
         Digest::MD5.hexdigest(key)
       end
 
