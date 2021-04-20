@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'sprockets',              '>= 3.7.1'
   spec.add_dependency 'sass',                   '~> 3.4.25'
-  spec.add_dependency 'uglifier',               '~> 4.1.3'
+  spec.add_dependency 'uglifier',               '>= 4.1.3'
   spec.add_dependency 'coffee-script',          '~> 2.4.1'
   spec.add_dependency 'compass',                '~> 1.0.3'
   spec.add_dependency 'autoprefixer-rails',     '~> 8.0.0'
