@@ -241,7 +241,7 @@ module Locomotive
 
           # belongs_to
           _prepare(@fields.belongs_to) { |field, value| value_to_id(value, field.target_id) }
-
+          
           # many_to_many
           _prepare(@fields.many_to_many) { |field, value| values_to_ids(value, field.target_id) }
 
@@ -276,10 +276,10 @@ module Locomotive
         end
 
         def value_to_id(value, target_id)
+          return values_to_ids(value, target_id) if value.kind_of?(Array)
+
           _value = if value.is_a?(Hash)
             value['_id'] || value[:_id]
-          elsif value.respond_to?(:each) # array
-            values_to_ids(value, target_id)
           else
             value.respond_to?(:_id) ? value._id : value
           end
