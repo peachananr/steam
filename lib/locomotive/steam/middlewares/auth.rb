@@ -30,7 +30,12 @@ module Locomotive::Steam
       private
 
       def sign_up(options)
-        return if authenticated? || !is_recaptcha_valid?(options.type, options.recaptcha_response)
+        return if authenticated? 
+
+        if !is_recaptcha_valid?(options.type, options.recaptcha_response)
+          append_message(:invalid_recaptcha_code)
+          return
+        end
 
         status, entry = services.auth.sign_up(options, default_liquid_context, request)
 
@@ -101,7 +106,7 @@ module Locomotive::Steam
       end
 
       def append_message(message)
-        log "[Auth] status message = #{message.inspect}"
+        debug_log "[Auth] status message = #{message.inspect}"
 
         message ||= 'error'
         liquid_assigns["auth_#{message}"] = "auth_#{message}"
@@ -158,7 +163,7 @@ module Locomotive::Steam
         end
 
         def from
-          smtp_config['sender'] || 'support@locomotivecms.com'
+          smtp_config['sender'] || smtp_config['from'] || 'support@locomotivecms.com'
         end
 
         def subject
@@ -182,7 +187,7 @@ module Locomotive::Steam
         end
 
         def recaptcha_response
-          params["g-recaptcha-response"]
+          params['g-recaptcha-response']
         end
 
         def smtp
@@ -212,7 +217,6 @@ module Locomotive::Steam
             config
           end
         end
-
 
       end
 

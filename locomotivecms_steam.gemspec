@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'mongo',      '~> 2.13.1'
   spec.add_development_dependency 'origin',     '~> 2.3.1'
 
-  spec.add_dependency 'nokogiri',               '~> 1.11.0'
+  spec.add_dependency 'nokogiri',               '>= 1.11', '< 1.14'
   spec.add_dependency 'sanitize',               '~> 5.2.1'
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.16.0'
@@ -48,7 +48,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mime-types',             '~> 3.3.0'
   spec.add_dependency 'duktape',                '~> 2.0.1.1'
   spec.add_dependency 'pony',                   '~> 1.12'
-
+  
   spec.add_dependency 'locomotivecms_common',   '~> 0.4.0'
 
   spec.required_ruby_version = ['>= 2.5', '< 3']

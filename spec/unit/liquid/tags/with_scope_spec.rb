@@ -62,7 +62,7 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
       it { expect(conditions['hidden']).to eq false }
 
     end
-
+    
     describe 'decode regexps' do
 
       let(:source) { "{% with_scope title: /Like this one|or this one/ %}{% assign conditions = with_scope %}{% endwith_scope %}" }
@@ -143,6 +143,15 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
       it { expect(conditions['price.lt']).to eq 50 }
       it { expect(conditions['published_at.lte']).to eq '2019-09-10 00:00:00' }
       it { expect(conditions['published_at.gte']).to eq '2019/09/09 00:00:00' }
+
+    end
+
+    describe 'In a loop context, each scope should be evaluated correctly' do
+        let(:assigns) { {'list' => ['A', 'B', 'C']} }
+
+        let(:source) { "{% for key in list %}{% with_scope foo: key %}{% assign conditions = with_scope %}{% endwith_scope %}{{ conditions }}{% endfor %}" }
+
+      it { expect(output).to eq '{"foo"=>"A"}{"foo"=>"B"}{"foo"=>"C"}' }
 
     end
 
