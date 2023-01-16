@@ -87,7 +87,7 @@ module Locomotive::Steam
           end
         end
         key = "#{Locomotive::Steam::VERSION}/site/#{site._id}/#{get_updated_at.to_i}/page/#{path}/#{query}"
-        puts key
+        # Sample: 1.6.1/site/5adf778b6eabcc00190b75b1/1661074591/page//posts/oman-backpacking-budget-7-days-itinerary/
         Digest::MD5.hexdigest(key)
       end
 
