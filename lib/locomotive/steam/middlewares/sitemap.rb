@@ -7,7 +7,7 @@ module Locomotive::Steam
 
       def _call
         if env['PATH_INFO'] == '/sitemap.xml' && (page.nil? || page.not_found?)
-          render_response(build_xml, 200, 'text/plain')
+          render_response(build_xml, 200, 'application/xml')
         end
       end
 
@@ -89,7 +89,7 @@ module Locomotive::Steam
         <<-XML
   <url>
     <loc>#{base_url}#{entry[:loc]}</loc>
-    <lastmod>#{entry[:date].to_s('%Y-%m-%d')}</lastmod>
+    <lastmod>#{entry[:date].to_fs('%Y-%m-%d')}</lastmod>
     #{entry_links_to_xml(entry[:links])}
   </url>
         XML
