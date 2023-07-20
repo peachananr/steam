@@ -11,8 +11,7 @@ module Locomotive::Steam
           'steam.cache_control'       => 'Cache-Control',
           'steam.cache_vary'          => 'Vary',
           'steam.cache_etag'          => 'ETag',
-          'steam.cache_last_modified' => 'Last-Modified',
-          'steam.cache_status' => 'X-BucketListly-Cache-Status'
+          'steam.cache_last_modified' => 'Last-Modified'
         }.freeze
 
         def html?

@@ -33,7 +33,6 @@ module Locomotive::Steam
           env['steam.cache_vary']           = cache_vary
           env['steam.cache_etag']           = key
           env['steam.cache_last_modified']  = get_updated_at.httpdate
-          env['steam.cache_status']  = "HIT"
           # retrieve the response from the cache.
           # This is useful if no CDN is being used.
 
@@ -57,11 +56,9 @@ module Locomotive::Steam
         log("Cache key = #{key.inspect}")
         if marshaled = cache.read(key)
           log('Cache HIT')
-          env['steam.cache_status']  = "HIT"
           Marshal.load(marshaled)
         else
           log('Cache MISS')
-          env['steam.cache_status']  = "MISS"
           self.next.tap do |response|
             cache.write(key, marshal(response))
           end
