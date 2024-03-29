@@ -10,12 +10,11 @@ module Locomotive
 
       def initialize(site, request)
         attributes = site.metafields.values.reduce({}, :merge).with_indifferent_access
-        MIN_SCORE = 0.5
 
         @api      = attributes[:recaptcha_api_url] || GOOGLE_API_URL
         @secret   = attributes[:recaptcha_secret]
         @ip       = request.ip
-        @min_score = attributes[:recaptcha_threshold] || MIN_SCORE
+        @min_score = attributes[:recaptcha_threshold] || 0.5
       end
 
       def verify(response_code)
@@ -28,7 +27,7 @@ module Locomotive
           remoteip: @ip
         }})
 
-        return false if _response.parsed_response['score'] < MIN_SCORE
+        return false if _response.parsed_response['score'] < @min_score
         
         _response.parsed_response['success']
       end
