@@ -14,7 +14,7 @@ module Locomotive
         @api      = attributes[:recaptcha_api_url] || GOOGLE_API_URL
         @secret   = attributes[:recaptcha_secret]
         @ip       = request.ip
-        @min_score = attributes[:recaptcha_threshold] || 0.5
+        @min_score = (attributes[:recaptcha_threshold] || 0.5).to_f
       end
 
       def verify(response_code)
