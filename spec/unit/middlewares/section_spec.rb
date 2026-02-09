@@ -27,7 +27,10 @@ describe Locomotive::Steam::Middlewares::Section do
                           locale: 'en')
                         }
 
+  let(:body) { '' }
+
   before do
+    env['rack.input']             = StringIO.new(body)
     env['steam.page']             = page
     env['steam.services']         = services
     env['steam.locale']           = :en
@@ -46,23 +49,20 @@ describe Locomotive::Steam::Middlewares::Section do
   it 'renders the HTML code related to the section' do
     is_expected.to eq [
       200,
-      { "Content-Type" => "text/html" },
+      { "content-type" => "text/html" },
       [%(<div id="locomotive-section-header" class="locomotive-section" data-locomotive-section-type="header"><span id="header-section"></span>Here some </div>)]
     ]
   end
 
   context "the content of the section is in the request body" do
-
-    before do
-      allow(env['steam.request']).to receive(:body).and_return(StringIO.new(
-        %({ "section_content": { "id": "dropzone-42", "settings": { "name": "modified HTML" } } })
-      ))
+    let(:body) do
+      %({ "section_content": { "id": "dropzone-42", "settings": { "name": "modified HTML" } } })
     end
 
     it 'renders the HTML code related to the section' do
       is_expected.to eq [
         200,
-        { "Content-Type" => "text/html" },
+        { "content-type" => "text/html" },
         [%(<div id="locomotive-section-dropzone-42" class="locomotive-section" data-locomotive-section-type="header"><span id="dropzone-42-section"></span>Here some modified HTML</div>)]
       ]
     end

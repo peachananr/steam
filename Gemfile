@@ -11,10 +11,10 @@ group :development do
 
   gem 'rake'
 
-  gem 'puma',               '~> 6.1.0'
-  gem 'haml',               '~> 5.2.0'
+  gem 'puma',               '~> 6.4.0'
+  gem 'haml',               '~> 6.2.3'
 
-  gem 'rack', '~> 2.2.3.1'
+  gem 'rack', '~> 3.0'
   gem 'rack-mini-profiler', '~> 0.10.1'
   gem 'flamegraph'
   gem 'stackprof' # ruby 2.1+ only
@@ -22,7 +22,7 @@ group :development do
 end
 
 group :test do
-  gem 'rspec',              '~> 3.7.0'
+  gem 'rspec',              '~> 3.12.0'
   gem 'json_spec',          '~> 1.1.5'
   gem 'i18n-spec',          '~> 0.6.0'
 
@@ -30,7 +30,7 @@ group :test do
 
   # gem 'pry-byebug',         '~> 3.3.0'
 
-  gem 'rack-test',          '~> 0.8.2'
+  gem 'rack-test',          '~> 2.1.0'
 
-  gem 'coveralls',                  '~> 0.8.23',   require: false
+  gem 'simplecov',          '~> 0.22.0', require: false
 end

@@ -1,12 +1,4 @@
-# require 'simplecov'
-# require 'codeclimate-test-reporter'
-# require 'coveralls'
-# require 'simplecov'
-# require 'coveralls'
-
 require 'simplecov'
-require 'coveralls'
-
 
 SimpleCov.start do
   # formatter SimpleCov::Formatter::MultiFormatter.new([
@@ -34,6 +26,8 @@ require 'timecop'
 
 require_relative '../lib/locomotive/steam'
 require_relative 'support'
+
+ActiveSupport.to_time_preserves_timezone = true
 
 Locomotive::Steam.configure do |config|
   config.mode = :test
