@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rack-session',           '~> 2.0.0'
   spec.add_dependency 'rack_csrf',              '~> 2.6.0'
   spec.add_dependency 'dragonfly',              '~> 1.4.0'
-  spec.add_dependency 'moneta',                 '~> 1.6.0'
+  spec.add_dependency 'moneta',                 '~> 1.0.0'
 
   spec.add_dependency 'execjs',                 '~> 2.9.1'
 
